@@ -1,4 +1,4 @@
-# 📍 Scene Localization in Dense Images
+# Language-Guided Scene Localization
 
 An interactive language-guided image-localization prototype combining GroundingDINO candidate detection, CLIP ranking and SAM segmentation. It returns up to three matching regions and supports an optional negative prompt. Quantitative accuracy has not yet been established on a labelled benchmark.
 
@@ -53,8 +53,8 @@ brew install git-lfs
 **2. Clone the repository:**
 When you clone the repository, Git LFS will automatically download the large model weight files, ensuring all necessary components are present.
 ```bash
-git clone https://github.com/Lakshaypal/Scene_Localization.git
-cd Scene_Localization
+git clone https://github.com/Lakshaypal/language-guided-scene-localization.git
+cd language-guided-scene-localization
 git lfs pull
 ```
 *(Note: If the weights do not download automatically, run `git lfs pull` inside the repository.)*
