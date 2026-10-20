@@ -1,6 +1,6 @@
 # 📍 Scene Localization in Dense Images
 
-This project is a robust, interactive system that can identify, segment, and localize specific sub-scenes within a dense image based on a natural language query. The final prototype exceeds the initial requirements by implementing a state-of-the-art GroundedSAM pipeline and several custom modules for advanced semantic refinement and quality control.
+An interactive language-guided image-localization prototype combining GroundingDINO candidate detection, CLIP ranking and SAM segmentation. It returns up to three matching regions and supports an optional negative prompt. Quantitative accuracy has not yet been established on a labelled benchmark.
 
 **🎬 Drive Link: [Demo Vedio](https://drive.google.com/file/d/1hXu-7xfE6Awf8NKWoz-nhikCckRx--Yw/view?usp=share_link)**
 
@@ -14,7 +14,7 @@ This project is a robust, interactive system that can identify, segment, and loc
     - 🥇 **Top-3 Ranked Results**: Acknowledges ambiguity in dense scenes by providing the top three best-matching candidates.
     - 🚫 **Negative Prompting (Contrastive Filtering)**: Allows the user to provide negative queries (e.g., "white shirt") to actively disqualify irrelevant results, significantly improving search precision.
     - 🛡️ **Multi-Stage Quality Gating**: Employs a series of confidence and heuristic checks to filter out low-quality or nonsensical "hallucinated" results.
-- 📦 **Self-Contained & Reproducible**: Includes all necessary model weights via Git LFS, allowing for a seamless "clone-and-run" setup experience as requested.
+- 📦 **Checkpoint-based setup**: Uses pretrained checkpoints managed through Git LFS, plus an external GroundingDINO installation and a CLIP model download.
 - 🖥️ **Interactive Web UI**: A user-friendly interface built with Gradio for easy demonstration and testing, complete with status feedback for a professional user experience.
 
 ---
@@ -35,7 +35,7 @@ The system is built on a state-of-the-art **GroundedSAM** pipeline, which intell
     
     The system collects the **first three candidates** that successfully pass all filters.
 
-5. ✂️ **Precise Segmentation (SAM):** For the final, validated candidates, the **Segment Anything Model (SAM)** is used to generate pixel-perfect, background-removed segmentation masks.
+5. ✂️ **Precise Segmentation (SAM):** For the final, validated candidates, the **Segment Anything Model (SAM)** is used to generate pixel-level, background-removed segmentation masks.
 
 ---
 
@@ -53,8 +53,9 @@ brew install git-lfs
 **2. Clone the repository:**
 When you clone the repository, Git LFS will automatically download the large model weight files, ensuring all necessary components are present.
 ```bash
-git clone [https://github.com/Lakshaypal/aims_2k28_localization]
-cd [AIMS 2K28: Scene Localization in Dense Images]
+git clone https://github.com/Lakshaypal/Scene_Localization.git
+cd Scene_Localization
+git lfs pull
 ```
 *(Note: If the weights do not download automatically, run `git lfs pull` inside the repository.)*
 
@@ -65,10 +66,12 @@ conda create --name scene_loc python=3.10
 conda activate scene_loc
 ```
 
-**4. Install dependencies:**
-All required packages are listed in `requirements.txt`.
+**4. Install dependencies and GroundingDINO:**
+Install the Python dependencies and the external GroundingDINO implementation. Its config must be available under `GroundingDINO/groundingdino/config/`.
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+git clone https://github.com/IDEA-Research/GroundingDINO.git
+python -m pip install -e GroundingDINO
 ```
 
 ---
@@ -80,6 +83,8 @@ Launch the interactive Gradio application with the following command from the pr
 ```bash
 python src/app.py
 ```
+Verify that `weights/groundingdino_swint_ogc.pth` and `weights/sam_vit_b_01ec64.pth` contain the actual checkpoints rather than Git LFS pointer text. CLIP is fetched from Hugging Face on first use. The code selects Apple MPS when available and otherwise CPU.
+
 Then, open your web browser and navigate to the local URL provided (e.g., `http://127.0.0.1:7860`).
 
 ---

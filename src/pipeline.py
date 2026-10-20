@@ -171,11 +171,12 @@ def process_query(image_path: str, text_prompt: str, output_path: str, negative_
         print("No confident results found after all filters.")
         return None, None
 
-    box_annotator = sv.BoxAnnotator(thickness=2, text_thickness=1, text_scale=0.5)
+    box_annotator = sv.BoxAnnotator(thickness=2)
     labels = [f"Rank {i+1} (Score: {score:.2f})" for i, score in enumerate(final_top_scores)]
     final_detections = sv.Detections(xyxy=np.array(final_top_boxes))
-    annotated_image = box_annotator.annotate(scene=image_bgr.copy(), detections=final_detections, labels=labels)
-    annotated_image_path = "images/final_annotated_multiple.jpg"
+    annotated_image = box_annotator.annotate(scene=image_bgr.copy(), detections=final_detections)
+    annotated_image = sv.LabelAnnotator(text_thickness=1, text_scale=0.5).annotate(scene=annotated_image, detections=final_detections, labels=labels)
+    annotated_image_path = output_path
     cv2.imwrite(annotated_image_path, annotated_image)
 
     return final_output_paths, annotated_image_path

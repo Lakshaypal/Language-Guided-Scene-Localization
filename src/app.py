@@ -1,5 +1,5 @@
 import gradio as gr
-import time
+import uuid
 from PIL import Image
 import numpy as np
 import cv2
@@ -51,7 +51,8 @@ def find_scene(image: np.ndarray, prompt: str, negative_prompt: str):
     print(f"Received new request. Prompt: '{prompt}', Negative Prompt: '{negative_prompt}'")
     
     image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    timestamp = int(time.time())
+    os.makedirs("images", exist_ok=True)
+    timestamp = uuid.uuid4().hex
     input_path = f"images/temp_input_{timestamp}.jpg"
     output_path = f"images/temp_output_{timestamp}.jpg"
     cv2.imwrite(input_path, image_bgr)
@@ -61,8 +62,8 @@ def find_scene(image: np.ndarray, prompt: str, negative_prompt: str):
     )
     
     if crop_paths and annotated_image_path:
-        cropped_images = [Image.open(p) for p in crop_paths]
-        annotated_img = Image.open(annotated_image_path)
+        cropped_images = [Image.open(p).copy() for p in crop_paths]
+        annotated_img = Image.open(annotated_image_path).copy()
         print("Processing complete. Returning images to UI.")
         
         os.remove(input_path)
