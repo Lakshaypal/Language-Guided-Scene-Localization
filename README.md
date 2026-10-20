@@ -53,8 +53,8 @@ brew install git-lfs
 **2. Clone the repository:**
 When you clone the repository, Git LFS will automatically download the large model weight files, ensuring all necessary components are present.
 ```bash
-git clone https://github.com/Lakshaypal/language-guided-scene-localization.git
-cd language-guided-scene-localization
+git clone https://github.com/Lakshaypal/Language-Guided-Scene-Localization.git
+cd Language-Guided-Scene-Localization
 git lfs pull
 ```
 *(Note: If the weights do not download automatically, run `git lfs pull` inside the repository.)*
